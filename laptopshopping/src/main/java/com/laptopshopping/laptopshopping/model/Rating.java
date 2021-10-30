@@ -1,27 +1,29 @@
 package com.laptopshopping.laptopshopping.model;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "ratings")
-@Data
+@Table(name = "ratings",
+        indexes = {
+                @Index(name = "comment_index", columnList = "rating_score, comment")
+        })
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Rating {
+public class Rating implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "rating_id")
     private int ratingId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @NotNull
     private User user;
@@ -30,10 +32,23 @@ public class Rating {
     private String comment;
 
     @Column(name = "rating_score")
-    @NotNull
     private int ratingScore;
 
-    @ManyToOne
+    @Column(name = "rating_date")
+    private LocalDateTime ratingDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @NotNull
     private Product product;
+
+    public Rating(int ratingId, User user, String comment, int ratingScore, LocalDateTime ratingDate,
+                  Product product) {
+        this.ratingId = ratingId;
+        this.user = user;
+        this.comment = comment;
+        this.ratingScore = ratingScore;
+        this.ratingDate = ratingDate;
+        this.product = product;
+    }
 }

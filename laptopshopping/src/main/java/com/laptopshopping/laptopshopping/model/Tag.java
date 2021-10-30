@@ -1,21 +1,24 @@
 package com.laptopshopping.laptopshopping.model;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "tags", schema = "public")
-@Data
+@Table(name = "tags", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"tag_name"})},
+        indexes = {
+                @Index(name = "tag_index", columnList = "tag_name")
+        })
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Tag implements Serializable {
 
     @Id
@@ -24,14 +27,20 @@ public class Tag implements Serializable {
     private int tagId;
 
     @Column(name = "tag_name")
-    @NotNull
+    @NotBlank
     private String tagName;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "product_tags",
             joinColumns = @JoinColumn(name = "tag_id"),
             inverseJoinColumns = @JoinColumn(name = "prodcut_id")
     )
-    Set<Product> products;
+    private List<Product> productList = new ArrayList<>();
+
+    public Tag(int tagId, String tagName) {
+        this.tagId = tagId;
+        this.tagName = tagName;
+    }
 }

@@ -1,32 +1,44 @@
 package com.laptopshopping.laptopshopping.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.sun.istack.NotNull;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import java.io.Serializable;
 
 @Entity
-@Data
+@Table(name = "cart_items", schema = "public", indexes = {
+        @Index(name = "cart_item_index", columnList = "quantity")
+})
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class CartItem {
+public class CartItem implements Serializable {
 
-    @EmbeddedId
-    CartItemKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_items")
+    private int cartItemId;
 
-    @ManyToOne
-    @MapsId("productId")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @NotNull
     @JoinColumn(name = "product_id")
     Product product;
 
-    @ManyToOne
-    @MapsId("cartId")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @NotNull
     @JoinColumn(name = "cart_id")
     Cart cart;
 
-    int quantity;
+    @Column(name = "quantity")
+    @Min(value = 0)
+    private int quantity;
 
+    public CartItem(int cartItemId, Cart cart, int quantity) {
+        this.cartItemId = cartItemId;
+        this.cart = cart;
+        this.quantity = quantity;
+    }
 }

@@ -1,20 +1,19 @@
 package com.laptopshopping.laptopshopping.model;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "pictures", schema = "public")
-@Data
-@AllArgsConstructor
+@Table(name = "pictures", schema = "public",
+        indexes = {
+                @Index(name = "picture_index", columnList = "picture_id, picture_path")
+        })
+@Getter
+@Setter
 @NoArgsConstructor
-@Builder
 public class Picture implements Serializable {
 
     @Id
@@ -23,12 +22,16 @@ public class Picture implements Serializable {
     private int pictureId;
 
     @Column(name = "picture_path")
-    @NotNull
     private String picturePath;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     @NotNull
-    private Product productId;
+    private Product product;
 
+    public Picture(int pictureId, String picturePath, Product product) {
+        this.pictureId = pictureId;
+        this.picturePath = picturePath;
+        this.product = product;
+    }
 }

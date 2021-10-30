@@ -1,21 +1,22 @@
 package com.laptopshopping.laptopshopping.model;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "carts", schema = "public")
-@Data
+@Table(name = "carts", schema = "public",
+        indexes = {
+                @Index(name = "cart_index", columnList = "cart_id")
+        })
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Cart implements Serializable {
 
     @Id
@@ -23,14 +24,23 @@ public class Cart implements Serializable {
     @Column(name = "cart_id")
     private int cartId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @NotNull
     private  User user;
 
+    @OneToOne(mappedBy = "cart", fetch = FetchType.LAZY)
+    private Order order;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CartItem> cartItemList = new ArrayList<>();
+
     @Column(name = "valid")
     private boolean valid;
 
-    @OneToMany(mappedBy = "cart")
-    Set<CartItem> quantity;
+    public Cart(int cartId, User user, Order order) {
+        this.cartId = cartId;
+        this.user = user;
+        this.order = order;
+    }
 }

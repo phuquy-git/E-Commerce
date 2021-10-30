@@ -1,21 +1,20 @@
 package com.laptopshopping.laptopshopping.model;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "discounts", schema = "public")
-@Data
+@Table(name = "discounts", schema = "public", indexes = {
+        @Index(name = "discount_index", columnList = "discount_price, start_date, end_date")
+})
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Discount implements Serializable {
 
     @Id
@@ -25,22 +24,32 @@ public class Discount implements Serializable {
 
     @Column(name = "discount_price")
     @NotNull
-    private BigDecimal discountPrice;
+    private Long discountPrice;
 
     @Column(name = "start_date")
-    private float startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "end_date")
-    private float endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "create_date")
-    private float createDate;
+    private LocalDateTime createDate;
 
     @Column(name = "update_date")
-    private float updateDate;
+    private LocalDateTime updateDate;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    @NotNull
-    private Product productId;
+    private Product product;
+
+    public Discount(int discountId, Long discountPrice, LocalDateTime startDate, LocalDateTime endDate,
+                    LocalDateTime createDate, LocalDateTime updateDate, Product product) {
+        this.discountId = discountId;
+        this.discountPrice = discountPrice;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+        this.product = product;
+    }
 }

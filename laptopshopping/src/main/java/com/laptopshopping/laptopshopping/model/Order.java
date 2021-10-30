@@ -1,22 +1,28 @@
 package com.laptopshopping.laptopshopping.model;
 
+import com.laptopshopping.laptopshopping.model.enum_entity.PayingType;
+import com.laptopshopping.laptopshopping.model.enum_entity.ShippingType;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table(name = "orders", schema = "public")
-@Data
+@Table(name = "orders", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"order_id", "phone"})}, indexes = {
+        @Index(name = "order_index", columnList = "order_id, order_date, shipping_fee")
+})
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Order {
+public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +31,10 @@ public class Order {
 
     @Column(name = "order_date")
     @NotNull
-    private Date orderDate;
+    private LocalDateTime orderDate;
 
     @Column(name = "name")
-    @NotNull
+    @NotBlank
     private String name;
 
     @Column(name = "phone")
@@ -42,8 +48,8 @@ public class Order {
     private String cancelReason;
 
     @Column(name = "shipping_fee")
-    @NotNull
-    private BigDecimal shippingFee;
+    @Min(value = 0)
+    private Long shippingFee;
 
     @Column(name = "address_city")
     @NotNull
@@ -61,15 +67,31 @@ public class Order {
     @NotNull
     private String address;
 
-    @ManyToOne
-    @JoinColumn(name = "pay_via_id")
-    private PayVia payVia;
+    @Enumerated(EnumType.STRING)
+    private PayingType payingType;
 
-    @ManyToOne
-    @JoinColumn(name = "ship_via_id")
-    private Shipping shipping;
+    @Enumerated(EnumType.STRING)
+    private ShippingType shippingType;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
+
+    public Order(int orderId, LocalDateTime orderDate, String name, String phone, String note, String cancelReason,
+                 Long shippingFee, String addressCity, String addressProvince, String addressWard, String address,
+                 PayingType payingType, ShippingType shippingType) {
+        this.orderId = orderId;
+        this.orderDate = orderDate;
+        this.name = name;
+        this.phone = phone;
+        this.note = note;
+        this.cancelReason = cancelReason;
+        this.shippingFee = shippingFee;
+        this.addressCity = addressCity;
+        this.addressProvince = addressProvince;
+        this.addressWard = addressWard;
+        this.address = address;
+        this.payingType = payingType;
+        this.shippingType = shippingType;
+    }
 }

@@ -1,21 +1,22 @@
 package com.laptopshopping.laptopshopping.model;
 
-import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NotFound;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Table(name = "brands", schema = "public",  uniqueConstraints = {@UniqueConstraint(columnNames = "brand_name")})
+@Table(name = "brands", schema = "public", uniqueConstraints = { @UniqueConstraint(columnNames = {"brand_name"})},
+        indexes = {
+        @Index(name = "brand_index", columnList = "brand_name")
+})
 public class Brand implements Serializable {
 
     @Id
@@ -24,13 +25,18 @@ public class Brand implements Serializable {
     private int brandId;
 
     @Column(name = "brand_name")
-    @NotNull
+    @NotBlank
     private String brandName;
 
     @Column(name = "logo_path")
-    @NotNull
     private String logoPath;
 
+    @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
+    private List<Product> productList = new ArrayList<>();
 
-
+    public Brand(int brandId, String brandName, String logoPath) {
+        this.brandId = brandId;
+        this.brandName = brandName;
+        this.logoPath = logoPath;
+    }
 }

@@ -1,21 +1,26 @@
 package com.laptopshopping.laptopshopping.model;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table(name = "acoounts", schema = "public")
-@Data
+@Table(name = "acounts", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"username", "password"})},
+        indexes = {
+        @Index(name = "account_index", columnList = "account_id, username")
+})
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Account {
+public class Account implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +28,7 @@ public class Account {
     private int accountId;
 
     @Column(name = "username")
-    @NotNull
+    @NotBlank
     private String username;
 
     @Column(name = "password")
@@ -34,24 +39,38 @@ public class Account {
     @NotNull
     private String passwordSalt;
 
-    @Column(name = "user_role")
-    @NotNull
-    private String userRole;
-
     @Column(name = "first_name")
-    @NotNull
     private String firstName;
 
     @Column(name = "last_name")
-    @NotNull
     private String lastName;
 
-    @Column(name = "last_login")
-    @NotNull
-    private Date lastLogin;
+    @Column(name = "email")
+    @Email
+    private String email;
 
-    @OneToOne
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
+
+    @OneToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @NotNull
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @NotNull
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    public Account(int accountId, String username, String password, String passwordSalt, String firstName,
+                   String lastName, String email, LocalDateTime lastLogin) {
+        this.accountId = accountId;
+        this.username = username;
+        this.password = password;
+        this.passwordSalt = passwordSalt;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.lastLogin = lastLogin;
+    }
 }

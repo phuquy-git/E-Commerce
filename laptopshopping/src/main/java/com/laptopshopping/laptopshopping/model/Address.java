@@ -1,20 +1,20 @@
 package com.laptopshopping.laptopshopping.model;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-@Table(name = "addresses", schema = "public")
-@Data
+@Table(name = "addresses", schema = "public", indexes = {
+        @Index(name = "address_index", columnList = "address_id")
+})
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Address {
+public class Address implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,19 +22,25 @@ public class Address {
     private int addressId;
 
     @Column(name = "city")
-    @NotNull
     private String city;
 
     @Column(name = "province")
-    @NotNull
     private String province;
 
     @Column(name = "ward")
-    @NotNull
     private String ward;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToOne(mappedBy = "defaultAddress", fetch = FetchType.LAZY)
+    private User defaultAddressUser;
+
+    public Address(int addressId, String city, String province, String ward) {
+        this.addressId = addressId;
+        this.city = city;
+        this.province = province;
+        this.ward = ward;
+    }
 }

@@ -1,21 +1,26 @@
 package com.laptopshopping.laptopshopping.model;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "categories")
-@Data
+@Table(name = "categories", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"category_name"})},
+        indexes = {
+                @Index(name = "category_name_index", columnList = "category_name")
+        })
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Category implements Serializable {
 
     @Id
@@ -24,17 +29,19 @@ public class Category implements Serializable {
     private int categoryId;
 
     @Column(name = "category_name")
-    @NotNull
+    @NotBlank
     private String categoryName;
 
     @Column(name = "description")
     private String description;
 
-    @ManyToMany
-    @JoinTable(
-            name = "product_categories",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private Set<Product> products;
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<SubCategory> subCategoriesList = new ArrayList<>();
+
+    public Category(int categoryId, String categoryName, String description, List<SubCategory> subCategoriesList) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        this.description = description;
+        this.subCategoriesList = subCategoriesList;
+    }
 }

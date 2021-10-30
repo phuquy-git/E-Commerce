@@ -1,20 +1,27 @@
 package com.laptopshopping.laptopshopping.model;
 
+import com.laptopshopping.laptopshopping.model.enum_entity.ProductType;
 import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "products", schema = "public")
-@Data
+@Table(name = "products", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"product_name"})},
+        indexes = {
+                @Index(name = "product_index", columnList = "product_name, price")
+        })
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class Product implements Serializable {
 
     @Id
@@ -23,43 +30,65 @@ public class Product implements Serializable {
     private int productId;
 
     @Column(name = "product_name")
-    @NotNull
+    @NotBlank
     private String productName;
 
-    @Column(name = "short_description")
-    private String shortDescription;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "detail_description")
-    private String detailDescription;
-
-    @Column(name = "technical_description")
-    private String technicalDescription;
+    @Enumerated(EnumType.STRING)
+    private ProductType productType;
 
     @Column(name = "price")
-    @NotNull
-    private BigDecimal price;
+    @Min(value = 0)
+    private Long price;
 
     @Column(name = "create_date")
-    private Date createDate;
+    private LocalDateTime createDate;
 
     @Column(name = "update_date")
-    private Date updateDate;
+    private LocalDateTime updateDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     @NotNull
     private Brand brand;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "discount_id")
+    private Discount discount;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Picture> PictureList = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "productList", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    private List<Tag> tagList = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "productList", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    private List<SubCategory> subCategoriesList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Rating> ratingList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<CartItem> cartItemList = new ArrayList<>();
+
     @Column(name = "rating")
     private double rating;
 
-    @ManyToMany(mappedBy = "product")
-    Set<Category> categories;
-
-    @ManyToMany(mappedBy = "tag")
-    Set<Tag> tags;
-
-    @OneToMany(mappedBy = "product")
-    Set<CartItem> quantity;
-
+    public Product(int productId, String productName, String description, ProductType productType, Long price,
+                   LocalDateTime createDate, LocalDateTime updateDate, Brand brand, Discount discount, double rating) {
+        this.productId = productId;
+        this.productName = productName;
+        this.description = description;
+        this.productType = productType;
+        this.price = price;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
+        this.brand = brand;
+        this.discount = discount;
+        this.rating = rating;
+    }
 }
