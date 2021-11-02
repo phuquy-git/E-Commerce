@@ -13,10 +13,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "brands", schema = "public", uniqueConstraints = { @UniqueConstraint(columnNames = {"brand_name"})},
-        indexes = {
-        @Index(name = "brand_index", columnList = "brand_name")
-})
+@Table(name = "brands", schema = "public",
+        uniqueConstraints = { @UniqueConstraint(columnNames = {"brand_name"})},
+        indexes = { @Index(name = "brand_index", columnList = "brand_name")})
 public class Brand implements Serializable {
 
     @Id

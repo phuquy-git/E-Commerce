@@ -10,4 +10,8 @@ public class LaptopshoppingApplication {
         SpringApplication.run(LaptopshoppingApplication.class, args);
     }
 
+    @Bean
+    public Modelmapper modelMapper() {
+        return new ModelMapper();
+    }
 }
