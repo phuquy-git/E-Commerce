@@ -1,4 +1,4 @@
-package com.laptopshopping.laptopshopping.service;
+package com.laptopshopping.laptopshopping.service.Implement;
 
 import com.laptopshopping.laptopshopping.constant.ErrorCode;
 import com.laptopshopping.laptopshopping.exception.CreateDataFailException;
@@ -8,6 +8,7 @@ import com.laptopshopping.laptopshopping.model.Brand;
 import com.laptopshopping.laptopshopping.model.Product;
 import com.laptopshopping.laptopshopping.repository.BrandRepository;
 import com.laptopshopping.laptopshopping.repository.ProductRepository;
+import com.laptopshopping.laptopshopping.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,50 +31,38 @@ public class BrandServiceImpl implements BrandService {
         this.productRepository = productRepository;
     }
 
-    @Override
     public List<Brand> getAllBrands() {
         return this.brandRepository.findAll();
     }
 
-    @Override
     public Brand getBrandById(Integer id) throws EntityNotFoundException{
         Optional<Brand> result = this.brandRepository.findById(id);
-
-        if(result.isEmpty()) {
+        if(result.isEmpty())
             throw new EntityNotFoundException();
-        }
         return result.get();
     }
-    @Override
+
     public Brand getBrandByName(String brandName)
             throws EntityNotFoundException{
-        List<Brand> result = this.brandRepository.findByBrandName(brandName);
-
-        if(result.isEmpty()) {
+        Optional<Brand> result = this.brandRepository.findByBrandName(brandName);
+        if(result.isEmpty())
             throw new EntityNotFoundException();
-        }
-
-        return result.get(0);
+        return result.get();
     }
 
     @Override
-    public Brand createBrand(String brandName, String logoPath)
-            throws CreateDataFailException {
-        Brand brand = new Brand();
-        try {
-            brand.setBrandName(brandName);
-            brand.setLogoPath(logoPath);
-            return brandRepository.save(brand);
+    public Brand createBrand(Brand brand) throws CreateDataFailException {
+        try { return brandRepository.save(brand);
         } catch (Exception ex) {
             throw new CreateDataFailException(ErrorCode.ERROR_BRAND_NOT_SAVED);
         }
     }
 
-    public void updateBrand(Brand brand, String brandName, String logoPath)
+    @Override
+    public void updateBrand(Brand brand)
             throws UpdateDataFailException {
         try {
             Brand currentBrand = getBrandById(brand.getBrandId());
-            brand.setLogoPath(brand.getLogoPath());
             brandRepository.save(currentBrand);
         } catch (Exception ex) {
             throw new UpdateDataFailException(ErrorCode.ERROR_BRAND_NOT_UPDATED);
@@ -95,4 +84,5 @@ public class BrandServiceImpl implements BrandService {
             throw new DeleteDataFailException(ErrorCode.ERROR_BRAND_NOT_DELETED);
         }
     }
+}
 
