@@ -4,8 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class BrandNameNotFoundException extends Exception{
-
-    public BrandNameNotFoundException(String message) { super(message); }
-
+public class DeleteDataFailException extends Exception {
+    public DeleteDataFailException(String message) {
+        super(message);
+    }
 }
+

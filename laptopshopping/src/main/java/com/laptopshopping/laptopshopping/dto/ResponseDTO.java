@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseDto {
+public class ResponseDTO {
     private LocalDateTime time = LocalDateTime.now();
     private String errorCode;
     private Object data;
     private String successCode;
 
-    public ResponseDto(String errorCode, Object data, String successCode) {
+    public ResponseDTO(String errorCode, Object data, String successCode) {
         this.errorCode = errorCode;
         this.data = data;
         this.successCode = successCode;

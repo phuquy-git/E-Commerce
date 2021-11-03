@@ -1,98 +1,98 @@
 package com.laptopshopping.laptopshopping.service;
 
 import com.laptopshopping.laptopshopping.constant.ErrorCode;
-import com.laptopshopping.laptopshopping.constant.SuccessCode;
-import com.laptopshopping.laptopshopping.dto.BrandDto;
-import com.laptopshopping.laptopshopping.dto.ResponseDto;
-import com.laptopshopping.laptopshopping.exception.BrandIdNotFoundException;
-import com.laptopshopping.laptopshopping.exception.BrandNameNotFoundException;
-import com.laptopshopping.laptopshopping.exception.SaveErrorException;
+import com.laptopshopping.laptopshopping.exception.CreateDataFailException;
+import com.laptopshopping.laptopshopping.exception.DeleteDataFailException;
+import com.laptopshopping.laptopshopping.exception.UpdateDataFailException;
 import com.laptopshopping.laptopshopping.model.Brand;
+import com.laptopshopping.laptopshopping.model.Product;
 import com.laptopshopping.laptopshopping.repository.BrandRepository;
-import org.modelmapper.ModelMapper;
+import com.laptopshopping.laptopshopping.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
-public class BrandServiceImpl implements BrandService{
+public class BrandServiceImpl implements BrandService {
 
-    private final BrandRepository brandRepository;
+    private BrandRepository brandRepository;
 
-    private final ModelMapper modelMapper;
+    private ProductRepository productRepository;
 
     @Autowired
-    public BrandServiceImpl(BrandRepository brandRepository, BrandRepository manufacturerRepository,
-                            ModelMapper mapper) {
-        this.brandRepository = manufacturerRepository;
-        this.modelMapper = mapper;
+    public BrandServiceImpl(BrandRepository brandRepository, ProductRepository productRepository) {
+        super();
+        this.brandRepository = brandRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
-    public ResponseDto retrieveBrands() {
-        ResponseDto responseDto = new ResponseDto();
-        List<Brand> brands = brandRepository.findAll();
-        List<BrandDto> brandsDtos = brands.stream().map(brand -> modelMapper.map(brand, BrandDto.class))
-                .collect(Collectors.toList());
-        responseDto.setSuccessCode(SuccessCode.SUCCESS_GET_ALL_BRAND);
-        responseDto.setData(brandsDtos);
-        return null;
+    public List<Brand> getAllBrands() {
+        return this.brandRepository.findAll();
     }
 
     @Override
-    public ResponseDto getBrandById(Integer id) throws BrandIdNotFoundException {
-        ResponseDto responseDto = new ResponseDto();
-        Brand brandById = brandRepository.findById(id)
-                .orElseThrow(() -> new BrandIdNotFoundException((ErrorCode.ERROR_BRAND_ID_NOT_FOUND)));
+    public Brand getBrandById(Integer id) throws EntityNotFoundException{
+        Optional<Brand> result = this.brandRepository.findById(id);
 
-        responseDto.setSuccessCode(SuccessCode.SUCCESS_GET_BRAND);
-        responseDto.setData(brandById);
-        return responseDto;
-    }
-
-    @Override
-    public ResponseDto getBrandByName(String brandName) throws BrandNameNotFoundException{
-        ResponseDto responseDto = new ResponseDto();
-        Brand brandByBrandName = brandRepository.findByBrandName()
-                .orElseThrow(() -> new BrandIdNotFoundException((ErrorCode.ERROR_BRAND_NAME_NOT_FOUND)));
-
-        responseDto.setSuccessCode(SuccessCode.SUCCESS_GET_BRAND);
-        responseDto.setData(brandByBrandName);
-        return responseDto;
-    }
-
-    @Override
-    public ResponseDto createBrand(BrandDto manufacturerDTO) {
-        ResponseDto responseDto = new ResponseDto();
-
-        Brand brand = brandRepository.findById(brand.getBrandId())
-                .orElseThrow(() -> new BrandIdNotFoundException(ErrorCode.ERROR_BRAND_ID_NOT_FOUND));
-
-        Brand brand = brandRepository.findById(brand.getBrandName())
-                .orElseThrow(() -> new BrandIdNotFoundException(ErrorCode.ERROR_BRAND_NAME_NOT_FOUND));
-
-        Brand brandSave = new Brand(brand.getBrandId(), brand.getBrandName(), brand.getLogoPath());
-        try {
-            brandSave = brandRepository.save(brandSave);
-        } catch (Exception e) {
-            throw new SaveErrorException(ErrorCode.ERROR_SAVE_BRAND);
+        if(result.isEmpty()) {
+            throw new EntityNotFoundException();
         }
-        responseDto.setSuccessCode(SuccessCode.SUCCESS_GET_BRAND);
-        responseDto.setData(Brand);
-        return responseDto;
-        return null;
+        return result.get();
+    }
+    @Override
+    public Brand getBrandByName(String brandName)
+            throws EntityNotFoundException{
+        List<Brand> result = this.brandRepository.findByBrandName(brandName);
+
+        if(result.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+
+        return result.get(0);
     }
 
     @Override
-    public ResponseDto updateBrand(int id, BrandDto manufacturerDTO) {
-        return null;
+    public Brand createBrand(String brandName, String logoPath)
+            throws CreateDataFailException {
+        Brand brand = new Brand();
+        try {
+            brand.setBrandName(brandName);
+            brand.setLogoPath(logoPath);
+            return brandRepository.save(brand);
+        } catch (Exception ex) {
+            throw new CreateDataFailException(ErrorCode.ERROR_BRAND_NOT_SAVED);
+        }
     }
 
-    @Override
-    public ResponseDto deleteBrand(Brand brand) {
-        return null;
+    public void updateBrand(Brand brand, String brandName, String logoPath)
+            throws UpdateDataFailException {
+        try {
+            Brand currentBrand = getBrandById(brand.getBrandId());
+            brand.setLogoPath(brand.getLogoPath());
+            brandRepository.save(currentBrand);
+        } catch (Exception ex) {
+            throw new UpdateDataFailException(ErrorCode.ERROR_BRAND_NOT_UPDATED);
+        }
     }
 
-}
+    public void deleteBrand(Integer id) throws DeleteDataFailException {
+        try {
+            Brand brand = getBrandById(id);
+            //delete all products
+            List<Product> products = productService.getProductByBrand(brand);
+            if (products != null) {
+                for (Product product : products)
+                    productService.deleteProduct(product.getProductId());
+            }
+            //delete brand
+            brandRepository.deleteById(id);
+        } catch (Exception e) {
+            throw new DeleteDataFailException(ErrorCode.ERROR_BRAND_NOT_DELETED);
+        }
+    }
+

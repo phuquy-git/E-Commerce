@@ -14,14 +14,16 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "brands", schema = "public",
-        uniqueConstraints = { @UniqueConstraint(columnNames = {"brand_name"})},
-        indexes = { @Index(name = "brand_index", columnList = "brand_name")})
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"brand_name"})},
+        indexes = {
+        @Index(name = "brand_index", columnList = "brand_name")})
 public class Brand implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_id")
-    private int brandId;
+    private Integer brandId;
 
     @Column(name = "brand_name")
     @NotBlank
@@ -33,9 +35,4 @@ public class Brand implements Serializable {
     @OneToMany(mappedBy = "brand", fetch = FetchType.LAZY)
     private List<Product> productList = new ArrayList<>();
 
-    public Brand(int brandId, String brandName, String logoPath) {
-        this.brandId = brandId;
-        this.brandName = brandName;
-        this.logoPath = logoPath;
-    }
 }
