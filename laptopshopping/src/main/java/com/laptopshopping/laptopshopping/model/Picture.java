@@ -2,6 +2,8 @@ package com.laptopshopping.laptopshopping.model;
 
 import com.sun.istack.NotNull;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,29 +11,28 @@ import java.io.Serializable;
 @Entity
 @Table(name = "pictures", schema = "public",
         indexes = {
-                @Index(name = "picture_index", columnList = "picture_id, picture_path")
+                @Index(name = "picture_index", columnList = "picture_id")
         })
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 public class Picture implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "picture_id")
-    private int pictureId;
+    private String pictureId;
 
-    @Column(name = "picture_path")
-    private String picturePath;
+    @Lob
+    @Type(type="org.hibernate.type.BinaryType")
+    @Column(name = "data", length = Integer.MAX_VALUE, nullable = false)
+    private byte[] data;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    @NotNull
-    private Product product;
+    @Column(name = "content_type")
+    private String contentType;
 
-    public Picture(int pictureId, String picturePath, Product product) {
-        this.pictureId = pictureId;
-        this.picturePath = picturePath;
-        this.product = product;
-    }
+    @Column(name = "size")
+    private Long size;
 }
