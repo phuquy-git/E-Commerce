@@ -6,6 +6,9 @@ import com.laptopshopping.laptopshopping.dto.BrandDTO;
 import com.laptopshopping.laptopshopping.dto.BrandDTOCreate;
 import com.laptopshopping.laptopshopping.dto.BrandDTOUpdate;
 import com.laptopshopping.laptopshopping.dto.ResponseDTO;
+import com.laptopshopping.laptopshopping.exception.CreateDataFailException;
+import com.laptopshopping.laptopshopping.exception.DeleteDataFailException;
+import com.laptopshopping.laptopshopping.exception.UpdateDataFailException;
 import com.laptopshopping.laptopshopping.model.Brand;
 import com.laptopshopping.laptopshopping.model.Product;
 import com.laptopshopping.laptopshopping.service.BrandService;
@@ -30,7 +33,7 @@ public class BrandController {
     private BrandCoverter brandCoverter;
 
     @Autowired
-    public BrandController(BrandService brandService, BrandCoverter brandCoverter;) {
+    public BrandController(BrandService brandService, BrandCoverter brandCoverter) {
         super();
         this.brandService = brandService;
         this.brandCoverter = brandCoverter;
@@ -50,7 +53,7 @@ public class BrandController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDTO> getBrandById() {
+    public ResponseEntity<ResponseDTO> getBrandById(@PathVariable Integer id) {
         ResponseDTO responseDTO = new ResponseDTO();
         List<Brand> brands = brandService.getBrandById();
         List<BrandDTO> brandDTOs = new ArrayList<>();
@@ -67,7 +70,7 @@ public class BrandController {
     public ResponseEntity<ResponseDTO> getProductByBrandId();
         ResponseDTO responseDTO = new ResponseDTO();
         List<Brand> brands = brandService.getBrandById();
-        List<ProductDTO> productDTOs = new ArrayList<>();
+        List<BrandDTO> brandDTOs = new ArrayList<>();
         try {
             if(productDTOs != null) {
                 for (Product product : products)
@@ -76,6 +79,21 @@ public class BrandController {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }responseDTO.setData(productDTOs);
     }
+
+    @GetMapping("/{name}")
+    public ResponseEntity<ResponseDTO> getBrandByName(@PathVariable String name) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<Brand> brands = brandService.getBrandByName();
+        List<BrandDTO> brandDTOs = new ArrayList<>();
+        if (brandDTOs != null) {
+            for (Brand brand : brands)
+                brandDTOs.add(brandCoverter.convertToDto(brand));
+        }
+        responseDTO.setData(brandDTOs);
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_BRAND_FOUND);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -91,7 +109,7 @@ public class BrandController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDTO> updateBrand(@Valid @RequestBody BrandDTOUpdate brandDTOUpdate)
-            throws UpdateDataFailException, ParseException {
+            throws UpdateDataFailException {
         ResponseDTO responseDTO = new ResponseDTO();
         Brand brand = brandCoverter.convertToEntityUpdate(brandDTOUpdate);
         brandService.updateBrand(brand);
