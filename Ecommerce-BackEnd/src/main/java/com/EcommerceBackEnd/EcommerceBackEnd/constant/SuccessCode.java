@@ -28,4 +28,9 @@ public class SuccessCode {
     public static final String SUCCESS_RATING_SAVED = "SUCCESS_RATING_SAVED";
     public static final String SUCCESS_RATING_UPDATED = "SUCCESS_RATING_UPDATED";
     public static final String SUCCESS_RATING_DELETED = "SUCCESS_RATING_DELETED";
+
+    //Account
+    public static final String SUCCESS_USER_FOUND = "SUCCESS_USER_FOUND";
+    public static final String SUCCESS_USER_UPDATED = "SUCCESS_USER_UPDATED";
+    public static final String SUCCESS_USER_DELETED = "SUCCESS_USER_DELETED";
 }

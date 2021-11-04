@@ -8,10 +8,7 @@ import com.EcommerceBackEnd.EcommerceBackEnd.exception.CreateDataFailException;
 import com.EcommerceBackEnd.EcommerceBackEnd.exception.DataNotFoundException;
 import com.EcommerceBackEnd.EcommerceBackEnd.exception.DeleteDataFailException;
 import com.EcommerceBackEnd.EcommerceBackEnd.exception.UpdateDataFailException;
-import com.EcommerceBackEnd.EcommerceBackEnd.model.Brand;
-import com.EcommerceBackEnd.EcommerceBackEnd.model.Category;
-import com.EcommerceBackEnd.EcommerceBackEnd.model.Product;
-import com.EcommerceBackEnd.EcommerceBackEnd.model.Rating;
+import com.EcommerceBackEnd.EcommerceBackEnd.model.*;
 import com.EcommerceBackEnd.EcommerceBackEnd.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.awt.*;
+import java.awt.Image;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -44,6 +42,9 @@ public class AdminController {
     @Autowired
     private RatingService ratingService;
 
+    @Autowired
+    private AccountService accountService;
+
     //Converter
     @Autowired
     private ImageConverter imageConverter;
@@ -59,6 +60,9 @@ public class AdminController {
 
     @Autowired
     private RatingConverter ratingConverter;
+
+    @Autowired
+    private AccountConverter accountConverter;
 
     //ImageController
     @PostMapping("/image/save")
@@ -239,6 +243,40 @@ public class AdminController {
         ratingService.deleteRating(ratingId);
         responseDTO.setData(true);
         responseDTO.setSuccessCode(SuccessCode.SUCCESS_RATING_DELETED);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    //AccountController
+    @GetMapping(value = "/account")
+    public ResponseEntity<ResponseDTO> findAllAccount() {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<Account> accounts = accountService.getAllAccount();
+        List<AccountDTOAdmin> accountDTOAdmins = new ArrayList<>();
+        if (accounts != null) {
+            for (Account account : accounts)
+                accountDTOAdmins.add(accountConverter.convertToDtoAdmin(account));
+        }
+        responseDTO.setData(accountDTOAdmins);
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_USER_FOUND);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PutMapping("/account/update")
+    public ResponseEntity<ResponseDTO> updateAccountRoles(@Valid @RequestBody AccountDTOUpdateRoles accountDTOUpdateRoles) throws DataNotFoundException, UpdateDataFailException, ParseException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        Account account = accountConverter.convertToEntityUpdateRoles(accountDTOUpdateRoles);
+        accountService.updateAccountRoles(account);
+        responseDTO.setData(accountConverter.convertToDto(account));
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_USER_UPDATED);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @DeleteMapping(value = "/account/delete/{id}")
+    public ResponseEntity<ResponseDTO> deleteAccount(@PathVariable Long id) throws DeleteDataFailException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        accountService.deleteAccount(id);
+        responseDTO.setData(true);
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_USER_DELETED);
         return ResponseEntity.ok().body(responseDTO);
     }
 

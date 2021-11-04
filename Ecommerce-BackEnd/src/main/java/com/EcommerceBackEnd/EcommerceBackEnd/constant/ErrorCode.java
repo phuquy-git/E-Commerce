@@ -28,4 +28,9 @@ public class ErrorCode {
     public static final String ERROR_RATING_NOT_SAVED = "ERROR_RATING_NOT_SAVED";
     public static final String ERROR_RATING_NOT_UPDATED = "ERROR_RATING_NOT_UPDATED";
     public static final String ERROR_RATING_NOT_DELETED = "ERROR_RATING_NOT_DELETED";
+
+    //Account
+    public static final String ERROR_USER_NOT_FOUND = "ERROR_USER_NOT_FOUND";
+    public static final String ERROR_USER_NOT_UPDATED = "ERROR_USER_NOT_UPDATED";
+    public static final String ERROR_USER_NOT_DELETED = "ERROR_USER_NOT_DELETED";
 }
