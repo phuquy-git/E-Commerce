@@ -5,6 +5,7 @@ import com.EcommerceBackEnd.EcommerceBackEnd.exception.CreateDataFailException;
 import com.EcommerceBackEnd.EcommerceBackEnd.exception.DeleteDataFailException;
 import com.EcommerceBackEnd.EcommerceBackEnd.exception.UpdateDataFailException;
 import com.EcommerceBackEnd.EcommerceBackEnd.model.Brand;
+import com.EcommerceBackEnd.EcommerceBackEnd.model.Product;
 import com.EcommerceBackEnd.EcommerceBackEnd.repository.BrandRepository;
 import com.EcommerceBackEnd.EcommerceBackEnd.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;

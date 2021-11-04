@@ -16,4 +16,16 @@ public class ErrorCode {
     public static final String ERROR_BRAND_NOT_SAVED = "ERROR_BRAND_NOT_SAVED";
     public static final String ERROR_BRAND_NOT_UPDATED = "ERROR_BRAND_NOT_UPDATED";
     public static final String ERROR_BRAND_NOT_DELETED = "ERROR_BRAND_NOT_DELETED";
+
+    //Product
+    public static final String ERROR_PRODUCT_NOT_FOUND = "ERROR_PRODUCT_NOT_FOUND";
+    public static final String ERROR_PRODUCT_NOT_SAVED = "ERROR_PRODUCT_NOT_SAVED";
+    public static final String ERROR_PRODUCT_NOT_DELETED = "ERROR_PRODUCT_NOT_DELETED";
+    public static final String ERROR_PRODUCT_NOT_UPDATED = "ERROR_PRODUCT_NOT_UPDATED";
+
+    //Rating
+    public static final String ERROR_RATING_NOT_FOUND = "ERROR_RATING_NOT_FOUND";
+    public static final String ERROR_RATING_NOT_SAVED = "ERROR_RATING_NOT_SAVED";
+    public static final String ERROR_RATING_NOT_UPDATED = "ERROR_RATING_NOT_UPDATED";
+    public static final String ERROR_RATING_NOT_DELETED = "ERROR_RATING_NOT_DELETED";
 }

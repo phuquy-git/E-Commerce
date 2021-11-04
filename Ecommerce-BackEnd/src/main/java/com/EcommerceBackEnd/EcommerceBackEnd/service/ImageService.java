@@ -12,7 +12,7 @@ import java.util.List;
 public interface ImageService {
     public Image saveImage(MultipartFile file) throws IOException, CreateDataFailException;
 
-    public Image getImageById(String image_id);
+    public com.EcommerceBackEnd.EcommerceBackEnd.model.Image getImageById(String image_id);
 
     public List<Image> getAllImages();
 }

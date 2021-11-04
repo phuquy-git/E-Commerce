@@ -2,18 +2,17 @@ package com.EcommerceBackEnd.EcommerceBackEnd.controller;
 
 import com.EcommerceBackEnd.EcommerceBackEnd.constant.ErrorCode;
 import com.EcommerceBackEnd.EcommerceBackEnd.constant.SuccessCode;
-import com.EcommerceBackEnd.EcommerceBackEnd.converter.BrandConverter;
-import com.EcommerceBackEnd.EcommerceBackEnd.converter.CategoryConverter;
-import com.EcommerceBackEnd.EcommerceBackEnd.converter.ImageConverter;
+import com.EcommerceBackEnd.EcommerceBackEnd.converter.*;
 import com.EcommerceBackEnd.EcommerceBackEnd.dto.*;
 import com.EcommerceBackEnd.EcommerceBackEnd.exception.CreateDataFailException;
 import com.EcommerceBackEnd.EcommerceBackEnd.exception.DataNotFoundException;
 import com.EcommerceBackEnd.EcommerceBackEnd.exception.DeleteDataFailException;
+import com.EcommerceBackEnd.EcommerceBackEnd.exception.UpdateDataFailException;
 import com.EcommerceBackEnd.EcommerceBackEnd.model.Brand;
 import com.EcommerceBackEnd.EcommerceBackEnd.model.Category;
-import com.EcommerceBackEnd.EcommerceBackEnd.service.BrandService;
-import com.EcommerceBackEnd.EcommerceBackEnd.service.CategoryService;
-import com.EcommerceBackEnd.EcommerceBackEnd.service.ImageService;
+import com.EcommerceBackEnd.EcommerceBackEnd.model.Product;
+import com.EcommerceBackEnd.EcommerceBackEnd.model.Rating;
+import com.EcommerceBackEnd.EcommerceBackEnd.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.awt.*;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -38,6 +38,12 @@ public class AdminController {
     @Autowired
     private BrandService brandService;
 
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private RatingService ratingService;
+
     //Converter
     @Autowired
     private ImageConverter imageConverter;
@@ -47,6 +53,12 @@ public class AdminController {
 
     @Autowired
     private BrandConverter brandConverter;
+
+    @Autowired
+    private ProductConverter productConverter;
+
+    @Autowired
+    private RatingConverter ratingConverter;
 
     //ImageController
     @PostMapping("/image/save")
@@ -148,6 +160,85 @@ public class AdminController {
         ResponseDTO responseDTO = new ResponseDTO();
         brandService.deleteBrand(brandId);
         responseDTO.setSuccessCode(SuccessCode.SUCCESS_BRAND_DELETED);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    //ProductController
+    @GetMapping("/product")
+    public ResponseEntity<ResponseDTO> findAllProduct() throws DataNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        List<Product> products = productService.getAllProducts();
+        if (products != null)
+            for (Product product : products)
+                productDTOs.add(productConverter.convertToDto(product));
+        responseDTO.setData(productDTOs);
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_PRODUCT_FOUND);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/product/sort=id")
+    public ResponseEntity<ResponseDTO> findAllProductSortById() {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        List<Product> products = productService.getAllSortById();
+        if (products != null)
+            for (Product product : products)
+                productDTOs.add(productConverter.convertToDto(product));
+        responseDTO.setData(productDTOs);
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_PRODUCT_FOUND);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PostMapping(value = "/product/save")
+    public ResponseEntity<ResponseDTO> saveProduct(@Valid @RequestBody ProductDTOCreate productDTOCreate) throws CreateDataFailException, DataNotFoundException, IOException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        Product product = productConverter.convertToEntityCreate(productDTOCreate);
+        Product saveProduct = productService.addProduct(product);
+        responseDTO.setData(productConverter.convertToDto(saveProduct));
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_PRODUCT_SAVED);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @DeleteMapping(value = "/product/delete/{productId}")
+    public ResponseEntity<ResponseDTO> deleteProduct(@PathVariable Long productId) throws DeleteDataFailException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        productService.deleteProduct(productId);
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_PRODUCT_DELETED);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PutMapping(value = "/product/update")
+    public ResponseEntity<ResponseDTO> updateProduct(@Valid @RequestBody ProductDTOUpdate productDTOUpdate) throws ParseException, UpdateDataFailException, DataNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        Product product = productConverter.convertToEntityUpdate(productDTOUpdate);
+        productService.updateProduct(product);
+        responseDTO.setData(productConverter.convertToDto(product));
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_PRODUCT_UPDATED);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    //RatingController
+    @GetMapping("/rating")
+    public ResponseEntity<ResponseDTO> findAllRating() throws DataNotFoundException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        List<Rating> ratings = ratingService.getAllRatings();
+        List<RatingDTOShow> ratingDTOShows = new ArrayList<>();
+        if (ratings != null)
+            for (Rating rating : ratings) {
+                ratingDTOShows.add(ratingConverter.convertToDtoShow(rating));
+            }
+        responseDTO.setData(ratingDTOShows);
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_RATING_FOUND);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @DeleteMapping(value = "/rating/delete/{ratingId}")
+    public ResponseEntity<ResponseDTO> deleteRating(@PathVariable Long ratingId) throws DeleteDataFailException {
+        ResponseDTO responseDTO = new ResponseDTO();
+        ratingService.deleteRating(ratingId);
+        responseDTO.setData(true);
+        responseDTO.setSuccessCode(SuccessCode.SUCCESS_RATING_DELETED);
         return ResponseEntity.ok().body(responseDTO);
     }
 
