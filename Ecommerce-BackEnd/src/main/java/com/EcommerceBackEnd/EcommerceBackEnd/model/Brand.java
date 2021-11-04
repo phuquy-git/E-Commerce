@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "bname")
         }, indexes = {@Index(name = "brand_index", columnList = "brand_id, bname", unique = true)})
-public class Brand implements Serializable {
+public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_id", unique = true)
