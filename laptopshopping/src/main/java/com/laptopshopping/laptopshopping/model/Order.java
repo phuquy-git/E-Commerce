@@ -77,21 +77,4 @@ public class Order implements Serializable {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    public Order(int orderId, LocalDateTime orderDate, String name, String phone, String note, String cancelReason,
-                 Long shippingFee, String addressCity, String addressProvince, String addressWard, String address,
-                 PayingType payingType, ShippingType shippingType) {
-        this.orderId = orderId;
-        this.orderDate = orderDate;
-        this.name = name;
-        this.phone = phone;
-        this.note = note;
-        this.cancelReason = cancelReason;
-        this.shippingFee = shippingFee;
-        this.addressCity = addressCity;
-        this.addressProvince = addressProvince;
-        this.addressWard = addressWard;
-        this.address = address;
-        this.payingType = payingType;
-        this.shippingType = shippingType;
-    }
 }

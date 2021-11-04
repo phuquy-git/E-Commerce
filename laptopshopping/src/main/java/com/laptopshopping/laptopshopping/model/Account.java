@@ -62,15 +62,4 @@ public class Account implements Serializable {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    public Account(int accountId, String username, String password, String passwordSalt, String firstName,
-                   String lastName, String email, LocalDateTime lastLogin) {
-        this.accountId = accountId;
-        this.username = username;
-        this.password = password;
-        this.passwordSalt = passwordSalt;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.lastLogin = lastLogin;
-    }
 }

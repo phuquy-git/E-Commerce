@@ -5,15 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDTOUpdate {
-    @NotNull
-    private String categoryId;
+public class TagDTO {
+    private long tagId;
 
-    private String description;
+    private String tagName;
 }

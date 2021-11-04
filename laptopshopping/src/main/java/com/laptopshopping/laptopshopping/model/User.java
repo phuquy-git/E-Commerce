@@ -51,15 +51,4 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cart> cartList = new ArrayList<>();
 
-    public User(int userId, String phoneNumber, LocalDateTime registerDate, Account account, Address defaultAddress,
-                List<Address> addressList, List<Rating> ratingList, List<Cart> cartList) {
-        this.userId = userId;
-        this.phoneNumber = phoneNumber;
-        this.registerDate = registerDate;
-        this.account = account;
-        this.defaultAddress = defaultAddress;
-        this.addressList = addressList;
-        this.ratingList = ratingList;
-        this.cartList = cartList;
-    }
 }

@@ -35,8 +35,4 @@ public class Role implements Serializable {
     @OneToMany(mappedBy = "role")
     private List<Account> accountList = new ArrayList<>();
 
-    public Role(int roleId, RoleName roleName) {
-        this.roleId = roleId;
-        this.roleName = roleName;
-    }
 }

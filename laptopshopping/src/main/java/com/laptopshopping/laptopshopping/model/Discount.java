@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -20,10 +21,10 @@ public class Discount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "discount_id")
-    private int discountId;
+    private long discountId;
 
     @Column(name = "discount_price")
-    @NotNull
+    @Min(value = 0)
     private Long discountPrice;
 
     @Column(name = "start_date")
@@ -42,14 +43,4 @@ public class Discount implements Serializable {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public Discount(int discountId, Long discountPrice, LocalDateTime startDate, LocalDateTime endDate,
-                    LocalDateTime createDate, LocalDateTime updateDate, Product product) {
-        this.discountId = discountId;
-        this.discountPrice = discountPrice;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-        this.product = product;
-    }
 }

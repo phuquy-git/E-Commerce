@@ -5,6 +5,7 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -76,19 +77,8 @@ public class Product implements Serializable {
     private List<CartItem> cartItemList = new ArrayList<>();
 
     @Column(name = "rating")
-    private double rating;
+    @Min(value = 0, message = "The star must be a positive integer")
+    @Max(value = 5, message = "Maximum star is 5")
+    private Float rating;
 
-    public Product(int productId, String productName, String description, ProductType productType, Long price,
-                   LocalDateTime createDate, LocalDateTime updateDate, Brand brand, Discount discount, double rating) {
-        this.productId = productId;
-        this.productName = productName;
-        this.description = description;
-        this.productType = productType;
-        this.price = price;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-        this.brand = brand;
-        this.discount = discount;
-        this.rating = rating;
-    }
 }

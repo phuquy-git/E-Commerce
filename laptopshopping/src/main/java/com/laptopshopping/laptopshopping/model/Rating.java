@@ -42,13 +42,4 @@ public class Rating implements Serializable {
     @NotNull
     private Product product;
 
-    public Rating(int ratingId, User user, String comment, int ratingScore, LocalDateTime ratingDate,
-                  Product product) {
-        this.ratingId = ratingId;
-        this.user = user;
-        this.comment = comment;
-        this.ratingScore = ratingScore;
-        this.ratingDate = ratingDate;
-        this.product = product;
-    }
 }

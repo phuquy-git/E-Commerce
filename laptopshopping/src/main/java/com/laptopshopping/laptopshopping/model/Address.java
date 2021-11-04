@@ -37,10 +37,4 @@ public class Address implements Serializable {
     @OneToOne(mappedBy = "defaultAddress", fetch = FetchType.LAZY)
     private User defaultAddressUser;
 
-    public Address(int addressId, String city, String province, String ward) {
-        this.addressId = addressId;
-        this.city = city;
-        this.province = province;
-        this.ward = ward;
-    }
 }

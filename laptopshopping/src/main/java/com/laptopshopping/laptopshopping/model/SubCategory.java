@@ -46,10 +46,4 @@ public class SubCategory implements Serializable {
     )
     private List<Product> productList = new ArrayList<>();
 
-    public SubCategory(int sunCategoryId, String subCategoryName, String description, Category category) {
-        this.subCategoryId = sunCategoryId;
-        this.subCategoryName = subCategoryName;
-        this.description = description;
-        this.category = category;
-    }
 }

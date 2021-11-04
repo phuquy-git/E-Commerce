@@ -6,14 +6,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDTOUpdate {
+public class DiscountDTOUpdate {
     @NotNull
-    private String categoryId;
+    private long discountId;
 
-    private String description;
+    private LocalDateTime starDate;
+
+    private LocalDateTime endDate;
+
+    private LocalDateTime updateDate;
 }

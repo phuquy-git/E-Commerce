@@ -11,9 +11,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDTOUpdate {
+public class TagDTOCreate {
     @NotNull
-    private String categoryId;
-
-    private String description;
+    private String tagName;
 }

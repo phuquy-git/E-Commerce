@@ -38,10 +38,4 @@ public class Category implements Serializable {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<SubCategory> subCategoriesList = new ArrayList<>();
 
-    public Category(int categoryId, String categoryName, String description, List<SubCategory> subCategoriesList) {
-        this.categoryId = categoryId;
-        this.categoryName = categoryName;
-        this.description = description;
-        this.subCategoriesList = subCategoriesList;
-    }
 }

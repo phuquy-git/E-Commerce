@@ -38,9 +38,4 @@ public class Tag implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "prodcut_id")
     )
     private List<Product> productList = new ArrayList<>();
-
-    public Tag(int tagId, String tagName) {
-        this.tagId = tagId;
-        this.tagName = tagName;
-    }
 }

@@ -20,7 +20,7 @@ public class PictureConverter {
                 .path(picture.getPictureId())
                 .toUriString();
         PictureDTO PictureDTO = modelMapper.map(picture, PictureDTO.class);
-        PictureDTO.setUrl(downloadURL);
+        PictureDTO.setPicturePath(downloadURL);
         return PictureDTO;
     }
 }

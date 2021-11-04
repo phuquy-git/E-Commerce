@@ -38,9 +38,4 @@ public class Cart implements Serializable {
     @Column(name = "valid")
     private boolean valid;
 
-    public Cart(int cartId, User user, Order order) {
-        this.cartId = cartId;
-        this.user = user;
-        this.order = order;
-    }
 }

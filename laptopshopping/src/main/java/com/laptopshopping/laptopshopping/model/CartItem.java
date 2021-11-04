@@ -36,9 +36,4 @@ public class CartItem implements Serializable {
     @Min(value = 0)
     private int quantity;
 
-    public CartItem(int cartItemId, Cart cart, int quantity) {
-        this.cartItemId = cartItemId;
-        this.cart = cart;
-        this.quantity = quantity;
-    }
 }
