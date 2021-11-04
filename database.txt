@@ -1,89 +1,77 @@
--- public.brands definition
+-- public.account definition
 
 -- Drop table
 
--- DROP TABLE public.brands;
+-- DROP TABLE public.account;
 
-CREATE TABLE public.brands (
+CREATE TABLE public.account (
+	account_id int4 NOT NULL,
+	firstname varchar NULL,
+	lastname varchar NULL,
+	username varchar NOT NULL,
+	"password" varchar NOT NULL,
+	email varchar NULL,
+	phone varchar NULL,
+	created_in date NULL,
+	updated_in date NULL,
+	CONSTRAINT account_pk PRIMARY KEY (account_id)
+);
+
+
+-- public.brand definition
+
+-- Drop table
+
+-- DROP TABLE public.brand;
+
+CREATE TABLE public.brand (
 	brand_id int4 NOT NULL,
-	logo_path varchar(255) NULL,
-	brand_name varchar(255) NOT NULL,
-	CONSTRAINT brands_pk PRIMARY KEY (brand_id)
+	bname varchar NOT NULL,
+	created_in date NULL,
+	updated_in date NULL,
+	CONSTRAINT brand_pk PRIMARY KEY (brand_id)
 );
 
 
--- public.categories definition
+-- public.category definition
 
 -- Drop table
 
--- DROP TABLE public.categories;
+-- DROP TABLE public.category;
 
-CREATE TABLE public.categories (
+CREATE TABLE public.category (
 	category_id int4 NOT NULL,
-	category_name varchar(255) NOT NULL,
-	description varchar(255) NULL,
-	CONSTRAINT categories_pk PRIMARY KEY (category_id)
+	cname varchar NOT NULL,
+	description varchar NULL,
+	created_in date NULL,
+	updated_in date NULL,
+	CONSTRAINT category_pk PRIMARY KEY (category_id)
 );
 
 
--- public.tags definition
+-- public.erole definition
 
 -- Drop table
 
--- DROP TABLE public.tags;
+-- DROP TABLE public.erole;
 
-CREATE TABLE public.tags (
-	tag_id int4 NOT NULL,
-	tag_name varchar(255) NOT NULL,
-	CONSTRAINT tags_pk PRIMARY KEY (tag_id)
-);
-
-
--- public.users definition
-
--- Drop table
-
--- DROP TABLE public.users;
-
-CREATE TABLE public.users (
-	user_id int4 NOT NULL,
-	phone_number varchar(11) NOT NULL,
-	register_date date NULL,
-	CONSTRAINT users_pk PRIMARY KEY (user_id)
-);
-
-
--- public.roles definition
-
--- Drop table
-
--- DROP TABLE public.roles;
-
-CREATE TABLE public.roles (
-	role_id int4 NOT NULL,
-	CONSTRAINT role_pk PRIMARY KEY (role_id)
-);
-
-
--- public.product_type definition
-
--- Drop table
-
--- DROP TABLE public.product_type;
-
-CREATE TABLE public.product_type (
+CREATE TABLE public.erole (
 
 );
 
 
--- public.role_name definition
+-- public.image definition
 
 -- Drop table
 
--- DROP TABLE public.role_name;
+-- DROP TABLE public.image;
 
-CREATE TABLE public.role_name (
-
+CREATE TABLE public.image (
+	image_id int4 NOT NULL,
+	"data" bytea NOT NULL,
+	content_type varchar NULL,
+	"size" int4 NULL,
+	CONSTRAINT image_pk PRIMARY KEY (image_id)
 );
 
 
@@ -98,6 +86,19 @@ CREATE TABLE public.paying_type (
 );
 
 
+-- public."role" definition
+
+-- Drop table
+
+-- DROP TABLE public."role";
+
+CREATE TABLE public."role" (
+	role_id int4 NOT NULL,
+	rname varchar NOT NULL,
+	CONSTRAINT role_pk PRIMARY KEY (role_id)
+);
+
+
 -- public.shipping_type definition
 
 -- Drop table
@@ -109,127 +110,46 @@ CREATE TABLE public.shipping_type (
 );
 
 
--- public.accounts definition
+-- public.account_role definition
 
 -- Drop table
 
--- DROP TABLE public.accounts;
+-- DROP TABLE public.account_role;
 
-CREATE TABLE public.accounts (
-	user_id int4 NOT NULL,
-	username varchar(255) NOT NULL,
-	"password" varchar(255) NOT NULL,
-	password_salt varchar(255) NOT NULL,
-	first_name varchar(255) NULL,
-	last_name varchar(255) NULL,
-	last_login date NULL,
+CREATE TABLE public.account_role (
 	account_id int4 NOT NULL,
-	email varchar(255) NOT NULL,
 	role_id int4 NOT NULL,
-	CONSTRAINT accounts_pk PRIMARY KEY (account_id),
-	CONSTRAINT accounts_fk FOREIGN KEY (user_id) REFERENCES public.users(user_id),
-	CONSTRAINT accounts_fk_1 FOREIGN KEY (role_id) REFERENCES public.roles(role_id)
+	CONSTRAINT account_role_pk PRIMARY KEY (role_id, account_id),
+	CONSTRAINT account_role_fk FOREIGN KEY (account_id) REFERENCES public.account(account_id),
+	CONSTRAINT account_role_fk_1 FOREIGN KEY (role_id) REFERENCES public."role"(role_id)
 );
 
 
--- public.addresses definition
+-- public.cart definition
 
 -- Drop table
 
--- DROP TABLE public.addresses;
+-- DROP TABLE public.cart;
 
-CREATE TABLE public.addresses (
-	address_id int4 NOT NULL,
-	city varchar(255) NOT NULL,
-	province varchar(255) NOT NULL,
-	ward varchar(255) NOT NULL,
-	user_id int4 NOT NULL,
-	CONSTRAINT addresses_pk PRIMARY KEY (address_id),
-	CONSTRAINT addresses_fk FOREIGN KEY (user_id) REFERENCES public.users(user_id)
-);
-
-
--- public.carts definition
-
--- Drop table
-
--- DROP TABLE public.carts;
-
-CREATE TABLE public.carts (
+CREATE TABLE public.cart (
 	cart_id int4 NOT NULL,
-	user_id int4 NOT NULL,
+	account_id int4 NOT NULL,
 	"valid" bool NULL,
 	CONSTRAINT carts_pk PRIMARY KEY (cart_id),
-	CONSTRAINT carts_fk FOREIGN KEY (user_id) REFERENCES public.users(user_id)
+	CONSTRAINT cart_fk FOREIGN KEY (account_id) REFERENCES public.account(account_id)
 );
 
 
--- public.products definition
+-- public."order" definition
 
 -- Drop table
 
--- DROP TABLE public.products;
+-- DROP TABLE public."order";
 
-CREATE TABLE public.products (
-	product_id int4 NOT NULL,
-	product_name varchar(255) NOT NULL,
-	description varchar(500) NULL,
-	product_type varchar(255) NULL,
-	price int8 NOT NULL,
-	create_date date NULL,
-	update_date date NULL,
-	brand_id int4 NOT NULL,
-	rating float4 NULL,
-	CONSTRAINT products_pk PRIMARY KEY (product_id),
-	CONSTRAINT products_fk FOREIGN KEY (brand_id) REFERENCES public.brands(brand_id)
-);
-
-
--- public.ratings definition
-
--- Drop table
-
--- DROP TABLE public.ratings;
-
-CREATE TABLE public.ratings (
-	product_id int4 NOT NULL,
-	user_id int4 NOT NULL,
-	"comment" varchar(255) NULL,
-	rating_score int4 NOT NULL,
-	rating_id int4 NOT NULL,
-	rating_date date NOT NULL,
-	CONSTRAINT ratings_pk PRIMARY KEY (rating_id),
-	CONSTRAINT ratings_fk FOREIGN KEY (product_id) REFERENCES public.products(product_id),
-	CONSTRAINT ratings_fk_1 FOREIGN KEY (user_id) REFERENCES public.users(user_id)
-);
-
-
--- public.sub_categories definition
-
--- Drop table
-
--- DROP TABLE public.sub_categories;
-
-CREATE TABLE public.sub_categories (
-	sub_category_id int4 NOT NULL,
-	sub_category_name varchar(255) NOT NULL,
-	description varchar(255) NULL,
-	category_id int4 NOT NULL,
-	CONSTRAINT sub_categories_pk PRIMARY KEY (sub_category_id),
-	CONSTRAINT sub_categories_fk FOREIGN KEY (category_id) REFERENCES public.categories(category_id)
-);
-
-
--- public.orders definition
-
--- Drop table
-
--- DROP TABLE public.orders;
-
-CREATE TABLE public.orders (
+CREATE TABLE public."order" (
 	order_id int4 NOT NULL,
 	cart_id int4 NOT NULL,
-	"name" varchar(255) NOT NULL,
+	name varchar(255) NOT NULL,
 	phone varchar(11) NOT NULL,
 	note varchar(500) NULL,
 	shipping_type varchar(255) NOT NULL,
@@ -242,86 +162,65 @@ CREATE TABLE public.orders (
 	address varchar(255) NOT NULL,
 	total_price int8 NOT NULL,
 	CONSTRAINT orders_pk PRIMARY KEY (order_id),
-	CONSTRAINT orders_fk FOREIGN KEY (cart_id) REFERENCES public.carts(cart_id)
+	CONSTRAINT orders_fk FOREIGN KEY (cart_id) REFERENCES public.cart(cart_id)
 );
 
 
--- public.cart_items definition
+-- public.product definition
 
 -- Drop table
 
--- DROP TABLE public.cart_items;
+-- DROP TABLE public.product;
 
-CREATE TABLE public.cart_items (
+CREATE TABLE public.product (
+	product_id int4 NOT NULL,
+	pname varchar(255) NOT NULL,
+	category_id int4 NOT NULL,
+	price int8 NULL,
+	rating_star float4 NULL,
+	image_id int4 NULL,
+	created_in date NULL,
+	updated_in date NULL,
+	description varchar NULL,
+	brand_id int4 NOT NULL,
+	CONSTRAINT products_pk PRIMARY KEY (product_id),
+	CONSTRAINT product_fk FOREIGN KEY (brand_id) REFERENCES public.brand(brand_id),
+	CONSTRAINT product_fk_1 FOREIGN KEY (category_id) REFERENCES public.category(category_id),
+	CONSTRAINT product_fk_2 FOREIGN KEY (image_id) REFERENCES public.image(image_id)
+);
+
+
+-- public.rating definition
+
+-- Drop table
+
+-- DROP TABLE public.rating;
+
+CREATE TABLE public.rating (
+	rating_id int4 NOT NULL,
+	product_id int4 NOT NULL,
+	account_id int4 NOT NULL,
+	"date" date NULL,
+	star int4 NOT NULL,
+	"comment" varchar NULL,
+	CONSTRAINT rating_pk PRIMARY KEY (rating_id),
+	CONSTRAINT rating_fk FOREIGN KEY (account_id) REFERENCES public.account(account_id),
+	CONSTRAINT rating_fk_1 FOREIGN KEY (product_id) REFERENCES public.product(product_id)
+);
+
+
+-- public.cart_item definition
+
+-- Drop table
+
+-- DROP TABLE public.cart_item;
+
+CREATE TABLE public.cart_item (
 	product_id int4 NOT NULL,
 	cart_id int4 NOT NULL,
 	quantity int4 NOT NULL,
 	cart_item_id int4 NOT NULL,
 	CONSTRAINT cart_items_pk PRIMARY KEY (cart_item_id),
-	CONSTRAINT cart_items_fk FOREIGN KEY (product_id) REFERENCES public.products(product_id),
-	CONSTRAINT cart_items_fk_1 FOREIGN KEY (cart_id) REFERENCES public.carts(cart_id)
-);
-
-
--- public.discounts definition
-
--- Drop table
-
--- DROP TABLE public.discounts;
-
-CREATE TABLE public.discounts (
-	discount_id int4 NOT NULL,
-	discount_price int8 NOT NULL,
-	start_date date NULL,
-	end_date date NULL,
-	create_date date NULL,
-	update_date date NULL,
-	product_id int4 NOT NULL,
-	CONSTRAINT "1_pk" PRIMARY KEY (discount_id),
-	CONSTRAINT "1_FK" FOREIGN KEY (product_id) REFERENCES public.products(product_id)
-);
-
-
--- public.pictures definition
-
--- Drop table
-
--- DROP TABLE public.pictures;
-
-CREATE TABLE public.pictures (
-	picture_id int4 NOT NULL,
-	picture_path varchar(255) NOT NULL,
-	product_id int4 NULL,
-	CONSTRAINT pictures_pk PRIMARY KEY (picture_id),
-	CONSTRAINT pictures_fk FOREIGN KEY (product_id) REFERENCES public.products(product_id)
-);
-
-
--- public.product_sub_categories definition
-
--- Drop table
-
--- DROP TABLE public.product_sub_categories;
-
-CREATE TABLE public.product_sub_categories (
-	product_id int4 NOT NULL,
-	sub_category_id int4 NOT NULL,
-	CONSTRAINT product_sub_categories_pk PRIMARY KEY (product_id, sub_category_id),
-	CONSTRAINT product_sub_categories_fk FOREIGN KEY (product_id) REFERENCES public.products(product_id),
-	CONSTRAINT product_sub_categories_fk_1 FOREIGN KEY (sub_category_id) REFERENCES public.sub_categories(sub_category_id)
-);
-
-
--- public.product_tags definition
-
--- Drop table
-
--- DROP TABLE public.product_tags;
-
-CREATE TABLE public.product_tags (
-	product_id int4 NOT NULL,
-	tag_id int4 NOT NULL,
-	CONSTRAINT product_tags_pk PRIMARY KEY (tag_id, product_id),
-	CONSTRAINT product_tags_fk FOREIGN KEY (product_id) REFERENCES public.products(product_id),
-	CONSTRAINT product_tags_fk_1 FOREIGN KEY (tag_id) REFERENCES public.tags(tag_id)
+	CONSTRAINT cart_item_fk FOREIGN KEY (cart_id) REFERENCES public.cart(cart_id),
+	CONSTRAINT cart_item_fk_1 FOREIGN KEY (product_id) REFERENCES public.product(product_id)
 );

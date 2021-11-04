@@ -9,9 +9,4 @@ public class LaptopshoppingApplication {
     public static void main(String[] args) {
         SpringApplication.run(LaptopshoppingApplication.class, args);
     }
-
-    @Bean
-    public Modelmapper modelMapper() {
-        return new ModelMapper();
-    }
 }
