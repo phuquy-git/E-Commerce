@@ -33,8 +33,8 @@ public class PublicController {
     @Autowired
     private RatingService ratingService;
 
-//    @Autowired
-//    private ImageService imageService;
+    @Autowired
+    private ImageService imageService;
 
     //Converter
     @Autowired
@@ -49,8 +49,8 @@ public class PublicController {
     @Autowired
     private RatingConverter ratingConverter;
 
-//    @Autowired
-//    private ImageConverter imageConverter;
+    @Autowired
+    private ImageConverter imageConverter;
 
     //AccountController
     @GetMapping("/account/{id}")
@@ -102,15 +102,14 @@ public class PublicController {
         Category category = categoryService.getCategoryByName(cname);
         List<ProductDTOItem> productDTOItems = new ArrayList<>();
         List<Product> products = category.getProducts();
-//        for (Product product : products)
-//            productDTOItems.add(productConverter.convertToDtoItem(product));
+        for (Product product : products)
+            productDTOItems.add(productConverter.convertToDtoItem(product));
         responseDTO.setData(productDTOItems);
         responseDTO.setSuccessCode(SuccessCode.SUCCESS_PRODUCT_FOUND);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     //RatingController
-
     @GetMapping("/rating/product={id}")
     public ResponseEntity<ResponseDTO> findRatingByProduct(@PathVariable Long id) throws DataNotFoundException {
         ResponseDTO responseDTO = new ResponseDTO();
@@ -126,37 +125,37 @@ public class PublicController {
     }
 
     //ImageController
-//    @GetMapping("/image")
-//    public ResponseEntity<ResponseDTO> findAllImages() {
-//        ResponseDTO responseDTO = new ResponseDTO();
-//        try {
-//            List<ImageDTO> imageDTOs = new ArrayList<>();
-//            List<Image> images = imageService.getAllImages();
-//            for (Image image : images) {
-//                imageDTOs.add(imageConverter.convertToDto(image));
-//            }
-//            if (imageDTOs != null) {
-//                responseDTO.setData(imageDTOs);
-//                responseDTO.setSuccessCode(SuccessCode.SUCCESS_IMAGE_FOUND);
-//            }
-//        } catch (Exception exception) {
-//            responseDTO.setErrorCode(ErrorCode.ERROR_IMAGE_NOT_FOUND);
-//        }
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
+    @GetMapping("/image")
+    public ResponseEntity<ResponseDTO> findAllImages() {
+        ResponseDTO responseDTO = new ResponseDTO();
+        try {
+            List<ImageDTO> imageDTOs = new ArrayList<>();
+            List<Image> images = imageService.getAllImages();
+            for (Image image : images) {
+                imageDTOs.add(imageConverter.convertToDto(image));
+            }
+            if (imageDTOs != null) {
+                responseDTO.setData(imageDTOs);
+                responseDTO.setSuccessCode(SuccessCode.SUCCESS_IMAGE_FOUND);
+            }
+        } catch (Exception exception) {
+            responseDTO.setErrorCode(ErrorCode.ERROR_IMAGE_NOT_FOUND);
+        }
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
-//    @GetMapping("/image/{image_id}")
-//    public ResponseEntity<byte[]> getFile(@PathVariable String image_id) {
-//        try {
-//            Image image = imageService.getImageById(image_id);
-//            return ResponseEntity.ok()
-//                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; imageId=\"" + image.getImageId() + "\"")
-//                    .contentType(MediaType.valueOf(image.getContentType()))
-//                    .body(image.getData());
-//        } catch (Exception exception) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    @GetMapping("/image/{image_id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable String image_id) {
+        try {
+            Image image = imageService.getImageById(image_id);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; imageId=\"" + image.getImageId() + "\"")
+                    .contentType(MediaType.valueOf(image.getContentType()))
+                    .body(image.getData());
+        } catch (Exception exception) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     //Search
     @GetMapping("/product/search={name}")

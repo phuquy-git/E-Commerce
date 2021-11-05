@@ -13,8 +13,8 @@ public interface AccountService {
     public Account getAccountById(Long id);
 
 //    public String getCurrentUsername();
-//
-//    public Account getAccountByUsername(String username) throws DataNotFoundException;
+
+    public Account getAccountByUsername(String username) throws DataNotFoundException;
 
 //    public void updateAccount(Account account) throws DataNotFoundException, UpdateDataFailException;
 
@@ -22,5 +22,5 @@ public interface AccountService {
 
     public void deleteAccount(Long id) throws DeleteDataFailException;
 
-//    public List<Account> getByNameContainting(String name);
+    public List<Account> getByNameContainting(String name);
 }

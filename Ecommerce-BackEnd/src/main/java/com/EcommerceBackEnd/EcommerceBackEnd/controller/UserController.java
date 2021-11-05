@@ -29,8 +29,8 @@ public class UserController {
     @Autowired
     private RatingService ratingService;
 
-//    @Autowired
-//    private ImageService imageService;
+    @Autowired
+    private ImageService imageService;
 
     @Autowired
     private AccountService accountService;
@@ -44,7 +44,8 @@ public class UserController {
 
     //RatingController
     @PostMapping(value = "/rating/save")
-    public ResponseEntity<ResponseDTO> saveRating(@Valid @RequestBody RatingDTOPost ratingDTOPost) throws DataNotFoundException, CreateDataFailException, UpdateDataFailException, ParseException {
+    public ResponseEntity<ResponseDTO> saveRating(@Valid @RequestBody RatingDTOPost ratingDTOPost)
+            throws DataNotFoundException, CreateDataFailException, UpdateDataFailException, ParseException {
         ResponseDTO responseDTO = new ResponseDTO();
         Rating rating = ratingConverter.convertToEntity(ratingDTOPost);
         ratingService.addRating(rating);
@@ -55,7 +56,8 @@ public class UserController {
 
     //AccountController
 //    @PutMapping("/account/update")
-//    public ResponseEntity<ResponseDTO> updateAccount(@Valid @RequestBody AccountDTO accountDTO) throws DataNotFoundException, UpdateDataFailException, ParseException {
+//    public ResponseEntity<ResponseDTO> updateAccount(@Valid @RequestBody AccountDTO accountDTO)
+//            throws DataNotFoundException, UpdateDataFailException, ParseException {
 //        ResponseDTO responseDTO = new ResponseDTO();
 //        Account account = accountConverter.convertToEntity(accountDTO);
 //        accountService.updateAccount(account);
