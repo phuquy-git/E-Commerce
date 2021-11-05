@@ -22,22 +22,22 @@ public class ProductConverter {
     @Autowired
     private ModelMapper modelMapper;
 
-    @Autowired
-    private ImageService imageService;
-
-    @Autowired
-    private ImageConverter imageConverter;
+//    @Autowired
+//    private ImageService imageService;
+//
+//    @Autowired
+//    private ImageConverter imageConverter;
 
     public ProductDTO convertToDto(Product product) {
         ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
         productDTO.setProductId(product.getProductId());
         productDTO.setCategoryName(product.getCategory().getCname());
         productDTO.setBrandName(product.getBrand().getBname());
-        Image image = product.getImage();
-        if (image != null) {
-            ImageDTO imageDTO = imageConverter.convertToDto(image);
-            productDTO.setImage(imageDTO.getUrl());
-        }
+//        Image image = product.getImage();
+//        if (image != null) {
+//            ImageDTO imageDTO = imageConverter.convertToDto(image);
+//            productDTO.setImage(imageDTO.getUrl());
+//        }
         return productDTO;
     }
 
@@ -48,23 +48,23 @@ public class ProductConverter {
         return product;
     }
 
-    public ProductDTOItem convertToDtoItem(Product product) {
-        ProductDTOItem productDTOItem = modelMapper.map(product, ProductDTOItem.class);
-        productDTOItem.setProductId(product.getProductId());
-        Image image = product.getImage();
-        if (image != null) {
-            ImageDTO imageDTO = imageConverter.convertToDto(image);
-            productDTOItem.setImage(imageDTO.getUrl());
-        }
-        return productDTOItem;
-    }
+//    public ProductDTOItem convertToDtoItem(Product product) {
+//        ProductDTOItem productDTOItem = modelMapper.map(product, ProductDTOItem.class);
+//        productDTOItem.setProductId(product.getProductId());
+//        Image image = product.getImage();
+//        if (image != null) {
+//            ImageDTO imageDTO = imageConverter.convertToDto(image);
+//            productDTOItem.setImage(imageDTO.getUrl());
+//        }
+//        return productDTOItem;
+//    }
 
     public Product convertToEntityCreate(ProductDTOCreate productDTOCreate) throws DataNotFoundException {
         Product product = modelMapper.map(productDTOCreate, Product.class);
         product.setCategory(categoryService.getCategoryByName(productDTOCreate.getCategoryName()));
         product.setBrand(brandService.getBrandByBname(productDTOCreate.getBrandName()));
-        if (productDTOCreate.getImage() != null)
-            product.setImage(imageService.getImageById(productDTOCreate.getImage()));
+//        if (productDTOCreate.getImage() != null)
+//            product.setImage(imageService.getImageById(productDTOCreate.getImage()));
         return product;
     }
 
@@ -73,8 +73,8 @@ public class ProductConverter {
         product.setProductId(productDTOUpdate.getProductId());
         product.setCategory(categoryService.getCategoryByName(productDTOUpdate.getCategoryName()));
         product.setBrand(brandService.getBrandByBname(productDTOUpdate.getBrandName()));
-        if (productDTOUpdate.getImage() != null)
-            product.setImage(imageService.getImageById(productDTOUpdate.getImage()));
+//        if (productDTOUpdate.getImage() != null)
+//            product.setImage(imageService.getImageById(productDTOUpdate.getImage()));
         return product;
     }
 }

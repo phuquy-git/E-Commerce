@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.awt.*;
-import java.awt.Image;
+import java.util.List;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -27,8 +26,8 @@ import java.util.ArrayList;
 @RequestMapping(value = "/admin")
 public class AdminController {
     //Service
-    @Autowired
-    private ImageService imageService;
+//    @Autowired
+//    private ImageService imageService;
 
     @Autowired
     private CategoryService categoryService;
@@ -46,8 +45,8 @@ public class AdminController {
     private AccountService accountService;
 
     //Converter
-    @Autowired
-    private ImageConverter imageConverter;
+//    @Autowired
+//    private ImageConverter imageConverter;
 
     @Autowired
     private CategoryConverter categoryConverter;
@@ -65,20 +64,20 @@ public class AdminController {
     private AccountConverter accountConverter;
 
     //ImageController
-    @PostMapping("/image/save")
-    public ResponseEntity<ResponseDTO> uploadImage(@RequestParam("file") MultipartFile file) {
-        ResponseDTO responseDTO = new ResponseDTO();
-        try {
-            Image image = imageService.saveImage(file);
-            ImageDTO imageDTO = imageConverter.convertToDto(image);
-            responseDTO.setData(imageDTO);
-            responseDTO.setSuccessCode(SuccessCode.SUCCESS_IMAGE_SAVED);
-        } catch (Exception e) {
-            responseDTO.setData(null);
-            responseDTO.setErrorCode(ErrorCode.ERROR_IMAGE_NOT_SAVED);
-        }
-        return ResponseEntity.ok().body(responseDTO);
-    }
+//    @PostMapping("/image/save")
+//    public ResponseEntity<ResponseDTO> uploadImage(@RequestParam("file") MultipartFile file) {
+//        ResponseDTO responseDTO = new ResponseDTO();
+//        try {
+//            Image image = imageService.saveImage(file);
+//            ImageDTO imageDTO = imageConverter.convertToDto(image);
+//            responseDTO.setData(imageDTO);
+//            responseDTO.setSuccessCode(SuccessCode.SUCCESS_IMAGE_SAVED);
+//        } catch (Exception e) {
+//            responseDTO.setData(null);
+//            responseDTO.setErrorCode(ErrorCode.ERROR_IMAGE_NOT_SAVED);
+//        }
+//        return ResponseEntity.ok().body(responseDTO);
+//    }
 
     //CategoryController
     @GetMapping("/category")
@@ -226,7 +225,7 @@ public class AdminController {
     @GetMapping("/rating")
     public ResponseEntity<ResponseDTO> findAllRating() throws DataNotFoundException {
         ResponseDTO responseDTO = new ResponseDTO();
-        List<Rating> ratings = ratingService.getAllRatings();
+        java.util.List<Rating> ratings = ratingService.getAllRatings();
         List<RatingDTOShow> ratingDTOShows = new ArrayList<>();
         if (ratings != null)
             for (Rating rating : ratings) {

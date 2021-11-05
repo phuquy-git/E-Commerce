@@ -12,6 +12,7 @@ import com.EcommerceBackEnd.EcommerceBackEnd.model.Rating;
 import com.EcommerceBackEnd.EcommerceBackEnd.repository.ProductRepository;
 import com.EcommerceBackEnd.EcommerceBackEnd.service.ImageService;
 import com.EcommerceBackEnd.EcommerceBackEnd.service.ProductService;
+import com.EcommerceBackEnd.EcommerceBackEnd.service.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

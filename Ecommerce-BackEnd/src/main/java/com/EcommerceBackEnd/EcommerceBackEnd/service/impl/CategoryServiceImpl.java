@@ -9,6 +9,7 @@ import com.EcommerceBackEnd.EcommerceBackEnd.model.Category;
 import com.EcommerceBackEnd.EcommerceBackEnd.model.Product;
 import com.EcommerceBackEnd.EcommerceBackEnd.repository.CategoryRepository;
 import com.EcommerceBackEnd.EcommerceBackEnd.service.CategoryService;
+import com.EcommerceBackEnd.EcommerceBackEnd.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

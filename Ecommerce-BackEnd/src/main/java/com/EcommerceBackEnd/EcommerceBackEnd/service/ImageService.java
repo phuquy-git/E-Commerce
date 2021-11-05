@@ -1,8 +1,6 @@
 package com.EcommerceBackEnd.EcommerceBackEnd.service;
 
-impocom.nashtech.ecommerceapi.entity.Image;
 import com.EcommerceBackEnd.EcommerceBackEnd.exception.CreateDataFailException;
-import com.nashtech.ecommerceapi.exception.CreateDataFailException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;

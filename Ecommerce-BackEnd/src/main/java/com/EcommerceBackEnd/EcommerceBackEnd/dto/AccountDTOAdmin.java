@@ -1,10 +1,9 @@
 package com.EcommerceBackEnd.EcommerceBackEnd.dto;
 
-import com.nashtech.ecommerceapi.entity.Role;
+import com.EcommerceBackEnd.EcommerceBackEnd.model.Role;
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;

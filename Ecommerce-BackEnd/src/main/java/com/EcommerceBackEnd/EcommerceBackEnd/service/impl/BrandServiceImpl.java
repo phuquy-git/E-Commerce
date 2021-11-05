@@ -8,6 +8,7 @@ import com.EcommerceBackEnd.EcommerceBackEnd.model.Brand;
 import com.EcommerceBackEnd.EcommerceBackEnd.model.Product;
 import com.EcommerceBackEnd.EcommerceBackEnd.repository.BrandRepository;
 import com.EcommerceBackEnd.EcommerceBackEnd.service.BrandService;
+import com.EcommerceBackEnd.EcommerceBackEnd.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
